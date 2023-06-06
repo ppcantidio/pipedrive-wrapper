@@ -9,41 +9,54 @@ class Client:
         self.base_url = "https://api.pipedrive.com/v1"
         self.token = token
         self._utl = Util()
+        self.headers = {"Accept": "application/json"}
 
-    def _post(self, url_context, body):
+    def _post(self, url_context: str, body: dict):
         url_to_request = self.__generate_url_to_request(url_context)
-        headers = self.__generate_headers()
 
         body = self.__check_values_of_dict(body)
 
-        response = requests.post(url=url_to_request, headers=headers, json=body)
+        response = requests.post(
+            url=url_to_request,
+            headers=self.headers,
+            json=body,
+        )
+
         self.__raise_for_status(response)
 
         result = self.__parse_response(response)
 
         return result.get("data")
 
-    def _put(self, url_context, body):
+    def _put(self, url_context: str, body: dict):
         url_to_request = self.__generate_url_to_request(url_context)
-        headers = self.__generate_headers()
 
         body = self.__check_values_of_dict(body)
 
-        response = requests.put(url=url_to_request, headers=headers, json=body)
+        response = requests.put(
+            url=url_to_request,
+            headers=self.headers,
+            json=body,
+        )
+
         self.__raise_for_status(response)
 
         result = self.__parse_response(response)
 
         return result.get("data")
 
-    def _get(self, url_context, params=None):
+    def _get(self, url_context: str, params: dict = None):
         url_to_request = self.__generate_url_to_request(url_context)
-        headers = self.__generate_headers()
 
         if isinstance(params, dict):
             params = self.__check_values_of_dict(params)
 
-        response = requests.get(url=url_to_request, headers=headers, params=params)
+        response = requests.get(
+            url=url_to_request,
+            headers=self.headers,
+            params=params,
+        )
+
         self.__raise_for_status(response)
 
         result = self.__parse_response(response)
@@ -64,7 +77,7 @@ class Client:
     def __check_values_of_dict(self, params: dict):
         return {key: value for key, value in params.items() if value is not None}
 
-    def __raise_for_status(self, response):
+    def __raise_for_status(self, response: requests.Response):
         status_code = response.status_code
 
         if 300 > status_code >= 200:
