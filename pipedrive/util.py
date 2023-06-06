@@ -8,7 +8,6 @@ class Util:
     def check_values_of_dict(self, params: dict):
         return {key: value for key, value in params.items() if value is not None}
 
-    # Validation methods
     def validate_email(self, email):
         if not isinstance(email, list):
             raise ValueError("Email must be a list of email objects.")

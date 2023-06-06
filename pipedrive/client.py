@@ -1,5 +1,6 @@
 import requests
 
+from .exceptions import BadRequest, Forbidden, InternalServerError, NotFound, TooManyRequests, Unauthorized
 from .util import Util
 
 
@@ -16,7 +17,7 @@ class Client:
         body = self.__check_values_of_dict(body)
 
         response = requests.post(url=url_to_request, headers=headers, json=body)
-        response.raise_for_status()
+        self.__raise_for_status(response)
 
         result = self.__parse_response(response)
 
@@ -29,7 +30,7 @@ class Client:
         body = self.__check_values_of_dict(body)
 
         response = requests.put(url=url_to_request, headers=headers, json=body)
-        response.raise_for_status()
+        self.__raise_for_status(response)
 
         result = self.__parse_response(response)
 
@@ -43,7 +44,7 @@ class Client:
             params = self.__check_values_of_dict(params)
 
         response = requests.get(url=url_to_request, headers=headers, params=params)
-        response.raise_for_status()
+        self.__raise_for_status(response)
 
         result = self.__parse_response(response)
 
@@ -62,3 +63,27 @@ class Client:
 
     def __check_values_of_dict(self, params: dict):
         return {key: value for key, value in params.items() if value is not None}
+
+    def __raise_for_status(self, response):
+        status_code = response.status_code
+
+        if 300 > status_code >= 200:
+            return
+
+        if status_code == 400:
+            raise BadRequest()
+
+        if status_code == 401:
+            raise Unauthorized()
+
+        if status_code == 403:
+            raise Forbidden()
+
+        if status_code == 404:
+            raise NotFound()
+
+        if status_code == 429:
+            raise TooManyRequests()
+
+        if status_code >= 500:
+            raise InternalServerError()
