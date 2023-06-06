@@ -44,3 +44,31 @@ class Util:
             raise ValueError(
                 "Invalid value for marketing_status. Allowed values are: no_consent, unsubscribed, subscribed, archived."
             )
+
+    def validate_due_date(self, due_date):
+        if not re.match(r"^\d{4}-\d{2}-\d{2}$", due_date):
+            raise ValueError("Invalid due_date format. Expected format: YYYY-MM-DD")
+
+    def validate_due_time(self, due_time):
+        if not re.match(r"^\d{2}:\d{2}$", due_time):
+            raise ValueError("Invalid due_time format. Expected format: HH:MM")
+
+    def validate_duration(self, duration):
+        if not re.match(r"^\d{2}:\d{2}$", duration):
+            raise ValueError("Invalid duration format. Expected format: HH:MM")
+
+    def validate_participants(self, participants):
+        if not isinstance(participants, list):
+            raise ValueError("participants must be a list")
+        for participant in participants:
+            if not isinstance(participant, dict) or "person_id" not in participant:
+                raise ValueError(
+                    "Invalid participant format. Expected format: [{'person_id': 1, 'primary_flag': True}]"
+                )
+
+    def validate_attendees(self, attendees):
+        if not isinstance(attendees, list):
+            raise ValueError("attendees must be a list")
+        for attendee in attendees:
+            if not isinstance(attendee, dict) or "email_address" not in attendee:
+                raise ValueError("Invalid attendee format. Expected format: [{'email_address': 'mail@example.org'}]")
