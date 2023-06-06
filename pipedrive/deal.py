@@ -92,7 +92,7 @@ class Deal:
         url_to_request = self.client._generate_url_to_request(url_context)
         headers = self.client._generate_headers()
 
-        data = {
+        payload = {
             "title": title,
             "value": value,
             "currency": currency,
@@ -109,9 +109,7 @@ class Deal:
             "add_time": add_time,
         }
 
-        payload = {k: v for k, v in data.items() if v is not None}
-
-        result = self._client._put(url=url_to_request, headers=headers, json=payload)
+        result = self._client._put(url=url_to_request, headers=headers, body=payload)
 
         return result
 
