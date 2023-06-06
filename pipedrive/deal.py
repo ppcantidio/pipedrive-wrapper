@@ -88,7 +88,7 @@ class Deal:
         visible_to: str = None,
         add_time: str = None,
     ):
-        url_context = f"deals/{deal_id}"
+        url_context = f"/deals/{deal_id}"
         url_to_request = self.client._generate_url_to_request(url_context)
         headers = self.client._generate_headers()
 
@@ -127,7 +127,7 @@ class Deal:
             Exception: If there is an error while retrieving the deal.
 
         """
-        url_context = f"deals/{deal_id}"
+        url_context = f"/deals/{deal_id}"
 
         return self.client._get(url_context)
 

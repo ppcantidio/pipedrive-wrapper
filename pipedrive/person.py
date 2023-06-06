@@ -36,7 +36,7 @@ class Deal:
             Exception: If there is an error while creating the person.
 
         """
-        url_context = "persons"
+        url_context = "/persons"
         body = {
             "name": name,
             "email": [{"value": email}],
@@ -105,7 +105,7 @@ class Deal:
             Exception: If there is an error while retrieving the person.
 
         """
-        url_context = f"persons/{person_id}"
+        url_context = f"/persons/{person_id}"
 
         return self.client._get(url_context)
 
@@ -142,7 +142,7 @@ class Deal:
             ValueError: If there are any validation errors for the fields.
 
         """
-        url_context = f"persons/{person_id}"
+        url_context = f"/persons/{person_id}"
 
         # Validate fields
         if email is not None:

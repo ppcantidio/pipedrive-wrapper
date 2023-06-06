@@ -63,12 +63,8 @@ class Client:
 
         return result.get("data")
 
-    def __generate_headers(self):
-        headers = {"Accept": "application/json"}
-        return headers
-
     def __generate_url_to_request(self, url_context: str):
-        url_to_request = f"{self.base_url}/{url_context}"
+        url_to_request = f"{self.base_url}{url_context}"
         return url_to_request
 
     def __parse_response(self, response: requests.Response):
