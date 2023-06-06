@@ -1,9 +1,11 @@
 from .client import Client
+from .util import Util
 
 
 class Deal:
     def __init__(self, client: Client) -> None:
         self._client = client
+        self._util = Util()
 
     def create_person(
         self,
@@ -106,3 +108,61 @@ class Deal:
         url_context = f"persons/{person_id}"
 
         return self.client._get(url_context)
+
+    def update_person(
+        self,
+        person_id: int,
+        name: str = None,
+        owner_id: int = None,
+        org_id: int = None,
+        email: list = None,
+        phone: list = None,
+        visible_to: str = None,
+        marketing_status: str = None,
+        add_time: str = None,
+    ):
+        """
+        Update a person's information.
+
+        Args:
+            person_id (int): The ID of the person to update.
+            name (str): The name of the person.
+            owner_id (int): The ID of the user who will be marked as the owner of this person.
+            org_id (int): The ID of the organization this person will belong to.
+            email (list): An email address or a list of email objects related to the person.
+            phone (list): A phone number or a list of phone objects related to the person.
+            visible_to (str): The visibility of the person.
+            marketing_status (str): The marketing status of the person.
+            add_time (str): The creation date & time of the person in UTC.
+
+        Returns:
+            dict: The updated person information as a dictionary.
+
+        Raises:
+            ValueError: If there are any validation errors for the fields.
+
+        """
+        url_context = f"persons/{person_id}"
+
+        # Validate fields
+        if email is not None:
+            self._util.validate_email(email)
+        if phone is not None:
+            self._util.validate_phone(phone)
+        if visible_to is not None:
+            self._util.validate_visible_to(visible_to)
+        if marketing_status is not None:
+            self._util.validate_marketing_status(marketing_status)
+
+        payload = {
+            "name": name,
+            "owner_id": owner_id,
+            "org_id": org_id,
+            "email": email,
+            "phone": phone,
+            "visible_to": visible_to,
+            "marketing_status": marketing_status,
+            "add_time": add_time,
+        }
+
+        return self.client._put(url_context, payload)

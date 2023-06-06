@@ -1,9 +1,11 @@
 from .client import Client
+from .util import Util
 
 
 class Deal:
     def __init__(self, client: Client) -> None:
         self._client = client
+        self._util = Util()
 
     def create_deal(
         self,
@@ -47,7 +49,7 @@ class Deal:
         """
         url = "/deals"
 
-        deal_data = {
+        payload = {
             "title": title,
             "value": value,
             "currency": currency,
@@ -63,8 +65,6 @@ class Deal:
             "visible_to": visible_to,
             "add_time": add_time,
         }
-
-        payload = {key: value for key, value in deal_data.items() if value is not None}
 
         result = self._client._post(url_context=url, body=payload)
 
@@ -174,8 +174,6 @@ class Deal:
             "limit": limit,
         }
 
-        filtered_params = {key: value for key, value in params.items() if value is not None}
-
-        result = self._client._get(url_context=url, params=filtered_params)
+        result = self._client._get(url_context=url, params=params)
 
         return result
