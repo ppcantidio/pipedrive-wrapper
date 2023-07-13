@@ -1,10 +1,9 @@
-from .client import Client
 from .util import Util
 
 
 class Deal:
-    def __init__(self, client: Client) -> None:
-        self._client = client
+    def __init__(self, client) -> None:
+        self.client = client
         self._util = Util()
 
     def create_deal(
@@ -23,6 +22,7 @@ class Deal:
         lost_reason: str = None,
         visible_to: str = None,
         add_time: str = None,
+        personalized_fields: dict = {},
     ):
         """
         Creates a new deal with the provided information.
@@ -66,7 +66,9 @@ class Deal:
             "add_time": add_time,
         }
 
-        result = self._client._post(url_context=url, body=payload)
+        payload.update(personalized_fields)
+
+        result = self.client._post(url_context=url, body=payload)
 
         return result
 
@@ -109,7 +111,7 @@ class Deal:
             "add_time": add_time,
         }
 
-        result = self._client._put(url=url_to_request, headers=headers, body=payload)
+        result = self.client._put(url=url_to_request, headers=headers, body=payload)
 
         return result
 
@@ -172,6 +174,6 @@ class Deal:
             "limit": limit,
         }
 
-        result = self._client._get(url_context=url, params=params)
+        result = self.client._get(url_context=url, params=params)
 
         return result

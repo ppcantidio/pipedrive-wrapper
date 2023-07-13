@@ -1,15 +1,19 @@
 import requests
 
+from .activity import Activity
+from .deal import Deal
 from .exceptions import BadRequest, Forbidden, InternalServerError, NotFound, TooManyRequests, Unauthorized
-from .util import Util
+from .person import Person
 
 
 class Client:
     def __init__(self, token: str) -> None:
         self.base_url = "https://api.pipedrive.com/v1"
         self.token = token
-        self._utl = Util()
         self.headers = {"Accept": "application/json"}
+        self.activity = Activity(self)
+        self.person = Person(self)
+        self.deal = Deal(self)
 
     def _post(self, url_context: str, body: dict):
         url_to_request = self.__generate_url_to_request(url_context)
@@ -64,7 +68,7 @@ class Client:
         return result.get("data")
 
     def __generate_url_to_request(self, url_context: str):
-        url_to_request = f"{self.base_url}{url_context}"
+        url_to_request = f"{self.base_url}{url_context}?api_token={self.token}"
         return url_to_request
 
     def __parse_response(self, response: requests.Response):

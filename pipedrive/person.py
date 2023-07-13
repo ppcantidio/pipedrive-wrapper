@@ -1,9 +1,8 @@
-from .client import Client
 from .util import Util
 
 
-class Deal:
-    def __init__(self, client: Client) -> None:
+class Person:
+    def __init__(self, client) -> None:
         self._client = client
         self._util = Util()
 
