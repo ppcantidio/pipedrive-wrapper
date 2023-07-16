@@ -9,8 +9,8 @@ class Activity:
     def create_activity(
         self,
         due_date: str,
-        due_time: str,
-        duration: str,
+        due_time: str = None,
+        duration: str = None,
         deal_id: int = None,
         lead_id: str = None,
         person_id: int = None,
@@ -59,34 +59,34 @@ class Activity:
         """
         url_context = "/activities"
 
-        # Validate fields
-        self._util.validate_due_date(due_date)
-        self._util.validate_due_time(due_time)
-        self._util.validate_duration(duration)
-        if participants is not None:
-            self._util.validate_participants(participants)
-        if attendees is not None:
-            self._util.validate_attendees(attendees)
-
+        # # Validate fields
+        # self._util.validate_due_date(due_date)
+        # self._util.validate_due_time(due_time)
+        # self._util.validate_duration(duration)
+        # if participants is not None:
+        #     self._util.validate_participants(participants)
+        # if attendees is not None:
+        #     self._util.validate_attendees(attendees)
+        due_date = due_date.replace("-", "/")
         payload = {
             "due_date": due_date,
-            "due_time": due_time,
-            "duration": duration,
-            "deal_id": deal_id,
-            "lead_id": lead_id,
-            "person_id": person_id,
-            "project_id": project_id,
-            "org_id": org_id,
-            "location": location,
-            "public_description": public_description,
-            "note": note,
+            # "due_time": due_time,
+            # "duration": duration,
+            "deal_id": int(deal_id),
+            # "lead_id": lead_id,
+            # "person_id": person_id,
+            # "project_id": project_id,
+            # "org_id": org_id,
+            # "location": location,
+            # "public_description": public_description,
+            # "note": note,
             "subject": subject,
-            "type": type,
+            # "type": type,
             "user_id": user_id,
-            "participants": participants,
-            "busy_flag": busy_flag,
-            "attendees": attendees,
-            "done": done,
+            # "participants": participants,
+            # "busy_flag": busy_flag,
+            # "attendees": attendees,
+            # "done": done,
         }
 
         return self._client._post(url_context, payload)

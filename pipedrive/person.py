@@ -3,14 +3,14 @@ from .util import Util
 
 class Person:
     def __init__(self, client) -> None:
-        self._client = client
+        self.client = client
         self._util = Util()
 
     def create_person(
         self,
         name: str,
-        email: str,
         phone: str,
+        email: str = None,
         owner_id: int = None,
         org_id: int = None,
         visible_to: str = None,
