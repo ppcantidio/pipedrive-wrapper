@@ -1,8 +1,8 @@
 from setuptools import find_packages, setup
 
 setup(
-    name="pipedrive.py",
-    version="1.0.0",
+    name="pipedrive-wrapper",
+    version="1.0.2",
     author="Pedro Cantidio",
     author_email="ppcantidio@gmail.com",
     description="A Python wrapper for the Pipedrive API",

@@ -1,167 +1,179 @@
 from .util import Util
 
 
-class Person:
+class Deal:
     def __init__(self, client) -> None:
         self.client = client
         self._util = Util()
 
-    def create_person(
+    def create_deal(
         self,
-        name: str,
-        phone: str,
-        email: str = None,
-        owner_id: int = None,
+        title: str,
+        value: str = None,
+        currency: str = None,
+        user_id: int = None,
+        person_id: int = None,
         org_id: int = None,
+        pipeline_id: int = None,
+        stage_id: int = None,
+        status: str = None,
+        expected_close_date: str = None,
+        probability: int = None,
+        lost_reason: str = None,
         visible_to: str = None,
-        marketing_status: str = None,
+        add_time: str = None,
+        personalized_fields: dict = {},
     ):
         """
-        Create a new person.
+        Creates a new deal with the provided information.
 
         Args:
-            name (str): The name of the person.
-            email (str): The email address of the person.
-            phone (str): The phone number of the person.
-            owner_id (int, optional): The ID of the user who will be marked as the owner of this person.
-            org_id (int, optional): The ID of the organization this person will belong to.
-            visible_to (str, optional): The visibility of the person.
-            marketing_status (str, optional): The marketing status of the person.
+            title (str): The title or name of the deal.
+            value (str, optional): The value of the deal. Default is None.
+            currency (str, optional): The currency of the deal. Default is None.
+            user_id (int, optional): The ID of the user associated with the deal. Default is None.
+            person_id (int, optional): The ID of the person associated with the deal. Default is None.
+            org_id (int, optional): The ID of the organization associated with the deal. Default is None.
+            pipeline_id (int, optional): The ID of the pipeline associated with the deal. Default is None.
+            stage_id (int, optional): The ID of the stage associated with the deal. Default is None.
+            status (str, optional): The status of the deal. Default is None.
+            expected_close_date (str, optional): The expected close date of the deal. Default is None.
+            probability (int, optional): The probability of the deal. Default is None.
+            lost_reason (str, optional): The reason for losing the deal. Default is None.
+            visible_to (str, optional): The visibility of the deal. Default is None.
+            add_time (str, optional): The time when the deal was added. Default is None.
 
         Returns:
-            dict: The created person information as a dictionary.
-
-        Raises:
-            Exception: If there is an error while creating the person.
+            The created deal object.
 
         """
-        url_context = "/persons"
-        body = {
-            "name": name,
-            "email": [{"value": email}],
-            "phone": [{"value": phone}],
-            "owner_id": owner_id,
+        url = "/deals"
+
+        payload = {
+            "title": title,
+            "value": value,
+            "currency": currency,
+            "user_id": user_id,
+            "person_id": person_id,
             "org_id": org_id,
+            "pipeline_id": pipeline_id,
+            "stage_id": stage_id,
+            "status": status,
+            "expected_close_date": expected_close_date,
+            "probability": probability,
+            "lost_reason": lost_reason,
             "visible_to": visible_to,
-            "marketing_status": marketing_status,
+            "add_time": add_time,
         }
 
-        return self.client._post(url_context, body)
+        payload.update(personalized_fields)
 
-    def search_person(
+        result = self.client._post(url_context=url, body=payload)
+
+        return result
+
+    def update_deal(
+        self,
+        deal_id: int,
+        title: str = None,
+        value: str = None,
+        currency: str = None,
+        user_id: int = None,
+        person_id: int = None,
+        org_id: int = None,
+        pipeline_id: int = None,
+        stage_id: int = None,
+        status: str = None,
+        expected_close_date: str = None,
+        probability: int = None,
+        lost_reason: str = None,
+        visible_to: str = None,
+        add_time: str = None,
+    ):
+        url_context = f"/deals/{deal_id}"
+        url_to_request = self.client._generate_url_to_request(url_context)
+        headers = self.client._generate_headers()
+
+        payload = {
+            "title": title,
+            "value": value,
+            "currency": currency,
+            "user_id": user_id,
+            "person_id": person_id,
+            "org_id": org_id,
+            "pipeline_id": pipeline_id,
+            "stage_id": stage_id,
+            "status": status,
+            "expected_close_date": expected_close_date,
+            "probability": probability,
+            "lost_reason": lost_reason,
+            "visible_to": visible_to,
+            "add_time": add_time,
+        }
+
+        result = self.client._put(url=url_to_request, headers=headers, body=payload)
+
+        return result
+
+    def get_deal_by_id(self, deal_id: int):
+        """
+        Retrieve a deal by its ID.
+
+        Args:
+            deal_id (int): The ID of the deal to retrieve.
+
+        Returns:
+            dict: The deal information as a dictionary.
+
+        Raises:
+            Exception: If there is an error while retrieving the deal.
+
+        """
+        url_context = f"/deals/{deal_id}"
+
+        return self.client._get(url_context)
+
+    def search_deals(
         self,
         term: str,
-        fields: str = None,
-        exact_match: bool = False,
+        exact_match: bool = True,
+        person_id: int = None,
         organization_id: int = None,
+        status: str = None,
         include_fields: str = None,
-        start: int = 0,
+        start: int = None,
         limit: int = None,
     ):
         """
-        Search for persons based on the provided parameters.
+        Performs a search for deals based on the provided parameters.
 
         Args:
-            term (str): The search term to look for.
-            fields (str, optional): The fields to perform the search from.
-            exact_match (bool, optional): Indicates whether to perform an exact match against the given term.
-            organization_id (int, optional): The ID of the organization to filter persons.
-            include_fields (str, optional): Additional fields to include in the results.
-            start (int, optional): Pagination start.
-            limit (int, optional): Items shown per page.
+            term (str): The search term to filter the deals.
+            exact_match (bool, optional): Indicates whether the search should be an exact match. Default is True.
+            person_id (int, optional): The ID of the person associated with the deals to be searched. Default is None.
+            organization_id (int, optional): The ID of the organization associated with the deals to be searched. Default is None.
+            status (str, optional): The status of the deals to be searched. Default is None.
+            include_fields (str, optional): The fields to be included in the search response. Default is None.
+            start (int, optional): The starting index for paginating the results. Default is None.
+            limit (int, optional): The maximum number of results to be returned. Default is None.
 
         Returns:
-            dict: The search results as a dictionary.
-
-        Raises:
-            Exception: If there is an error while searching for persons.
+            The search result.
 
         """
-        url_context = "persons/search"
+        url = f"/deals/search"
+
         params = {
             "term": term,
-            "fields": fields,
             "exact_match": exact_match,
+            "person_id": person_id,
             "organization_id": organization_id,
+            "status": status,
             "include_fields": include_fields,
             "start": start,
             "limit": limit,
         }
 
-        return self.client._get(url_context, params)
+        result = self.client._get(url_context=url, params=params)
 
-    def get_person_by_id(self, person_id: int):
-        """
-        Retrieve a person by their ID.
-
-        Args:
-            person_id (int): The ID of the person to retrieve.
-
-        Returns:
-            dict: The person information as a dictionary.
-
-        Raises:
-            Exception: If there is an error while retrieving the person.
-
-        """
-        url_context = f"/persons/{person_id}"
-
-        return self.client._get(url_context)
-
-    def update_person(
-        self,
-        person_id: int,
-        name: str = None,
-        owner_id: int = None,
-        org_id: int = None,
-        email: list = None,
-        phone: list = None,
-        visible_to: str = None,
-        marketing_status: str = None,
-        add_time: str = None,
-    ):
-        """
-        Update a person's information.
-
-        Args:
-            person_id (int): The ID of the person to update.
-            name (str): The name of the person.
-            owner_id (int): The ID of the user who will be marked as the owner of this person.
-            org_id (int): The ID of the organization this person will belong to.
-            email (list): An email address or a list of email objects related to the person.
-            phone (list): A phone number or a list of phone objects related to the person.
-            visible_to (str): The visibility of the person.
-            marketing_status (str): The marketing status of the person.
-            add_time (str): The creation date & time of the person in UTC.
-
-        Returns:
-            dict: The updated person information as a dictionary.
-
-        Raises:
-            ValueError: If there are any validation errors for the fields.
-
-        """
-        url_context = f"/persons/{person_id}"
-
-        # Validate fields
-        if email is not None:
-            self._util.validate_email(email)
-        if phone is not None:
-            self._util.validate_phone(phone)
-        if visible_to is not None:
-            self._util.validate_visible_to(visible_to)
-        if marketing_status is not None:
-            self._util.validate_marketing_status(marketing_status)
-
-        payload = {
-            "name": name,
-            "owner_id": owner_id,
-            "org_id": org_id,
-            "email": email,
-            "phone": phone,
-            "visible_to": visible_to,
-            "marketing_status": marketing_status,
-            "add_time": add_time,
-        }
-
-        return self.client._put(url_context, payload)
+        return result
