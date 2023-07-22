@@ -2,6 +2,7 @@ import requests
 
 from .activity import Activity
 from .deal import Deal
+from .deal_field import DealField
 from .exceptions import BadRequest, Forbidden, InternalServerError, NotFound, TooManyRequests, Unauthorized
 from .person import Person
 
@@ -14,6 +15,7 @@ class Client:
         self.activity = Activity(self)
         self.person = Person(self)
         self.deal = Deal(self)
+        self.deal_field = DealField(self)
 
     def _post(self, url_context: str, body: dict):
         url_to_request = self.__generate_url_to_request(url_context)
