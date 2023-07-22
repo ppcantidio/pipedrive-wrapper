@@ -111,6 +111,10 @@ class Deal:
             "add_time": add_time,
         }
 
+        for key, value in payload:
+            if value is None:
+                del payload[key]
+
         result = self.client._put(url=url_to_request, headers=headers, body=payload)
 
         return result
