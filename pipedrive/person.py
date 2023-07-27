@@ -46,7 +46,7 @@ class Person:
             "marketing_status": marketing_status,
         }
 
-        return self.client._post(url_context, body)
+        return self.client.post(url_context, body)
 
     def search_person(
         self,
@@ -88,7 +88,7 @@ class Person:
             "limit": limit,
         }
 
-        return self.client._get(url_context, params)
+        return self.client.get(url_context, params)
 
     def get_person_by_id(self, person_id: int):
         """
@@ -106,7 +106,7 @@ class Person:
         """
         url_context = f"/persons/{person_id}"
 
-        return self.client._get(url_context)
+        return self.client.get(url_context)
 
     def update_person(
         self,
@@ -164,4 +164,4 @@ class Person:
             "add_time": add_time,
         }
 
-        return self.client._put(url_context, payload)
+        return self.client.put(url_context, payload)

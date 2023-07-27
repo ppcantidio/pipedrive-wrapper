@@ -11,6 +11,7 @@ from logging import Logger
 
 class Client:
     def __init__(self, token: str, logger: Logger = logging) -> None:
+        self.extra_log = None
         self.base_url = "https://api.pipedrive.com/v1"
         self.token = token
         self.headers = {"Accept": "application/json"}
@@ -20,7 +21,7 @@ class Client:
         self.deal_field = DealField(self)
         self.logger = logger
 
-    def _post(self, url_context: str, body: dict):
+    def post(self, url_context: str, body: dict):
         url_to_request = self.__generate_url_to_request(url_context)
 
         self.extra_log = {'request_url': url_to_request, 'http_method': 'POST'}
@@ -45,7 +46,7 @@ class Client:
 
         return result.get("data")
 
-    def _put(self, url_context: str, body: dict):
+    def put(self, url_context: str, body: dict):
         url_to_request = self.__generate_url_to_request(url_context)
 
         self.extra_log = {'request_url': url_to_request, 'http_method': 'PUT'}
@@ -70,7 +71,7 @@ class Client:
 
         return result.get("data")
 
-    def _get(self, url_context: str, params: dict = None):
+    def get(self, url_context: str, params: dict = None):
         url_to_request = self.__generate_url_to_request(url_context)
 
         self.extra_log = {'request_url': url_to_request, 'http_method': 'GET'}

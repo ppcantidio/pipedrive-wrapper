@@ -68,7 +68,7 @@ class Deal:
 
         payload.update(personalized_fields)
 
-        result = self.client._post(url_context=url, body=payload)
+        result = self.client.post(url_context=url, body=payload)
 
         return result
 
@@ -91,8 +91,6 @@ class Deal:
         add_time: str = None,
     ):
         url_context = f"/deals/{deal_id}"
-        url_to_request = self.client._generate_url_to_request(url_context)
-        headers = self.client._generate_headers()
 
         payload = {
             "title": title,
@@ -115,7 +113,7 @@ class Deal:
             if value is None:
                 del payload[key]
 
-        result = self.client._put(url=url_to_request, headers=headers, body=payload)
+        result = self.client.put(url_context=url_context,  body=payload)
 
         return result
 
@@ -135,7 +133,7 @@ class Deal:
         """
         url_context = f"/deals/{deal_id}"
 
-        return self.client._get(url_context)
+        return self.client.get(url_context)
 
     def search_deals(
         self,
@@ -178,6 +176,13 @@ class Deal:
             "limit": limit,
         }
 
-        result = self.client._get(url_context=url, params=params)
+        result = self.client.get(url_context=url, params=params)
+
+        return result
+
+    def get_activities_associated_with_deal(self, deal_id):
+        url = f'/deals/{deal_id}/activities'
+
+        result = self.client.get(url_context=url)
 
         return result

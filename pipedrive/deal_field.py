@@ -22,12 +22,12 @@ class DealField:
         """
         url_context = f"/dealsFields/{deal_field_id}"
 
-        return self.client._get(url_context)
+        return self.client.get(url_context)
 
     def get_all_deal_fields(self):
         url_context = f"/dealFields"
 
-        return self.client._get(url_context)
+        return self.client.get(url_context)
 
     def get_deal_field_by_key(self, deal_field_key: str):
         all_deal_fields = self.get_all_deal_fields()

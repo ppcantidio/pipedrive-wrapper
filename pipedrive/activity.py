@@ -89,4 +89,13 @@ class Activity:
             # "done": done,
         }
 
+        return self._client.post(url_context, payload)
+
+    def update_acitity(self, activity_id: int, done: bool = False):
+        url_context = f"/activities/{activity_id}"
+
+        payload = {}
+        if done is not None:
+            payload['done'] = int(done)
+
         return self._client._post(url_context, payload)
